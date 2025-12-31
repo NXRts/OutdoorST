@@ -17,6 +17,31 @@ export interface Product {
   features?: string[];
 }
 
+// Prisma Product interface
+export interface PrismaProduct {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  price: number;
+  stock: number;
+  image: string | null;
+  images: string | null;
+  categoryId: string;
+  featured: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  category: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    image: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+}
+
 export const products: Product[] = [
   {
     id: 1,
@@ -261,3 +286,10 @@ export function getProductsByCategory(categorySlug: string): Product[] {
   return products.filter((p) => p.categorySlug === categorySlug);
 }
 
+export function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  }).format(amount);
+}

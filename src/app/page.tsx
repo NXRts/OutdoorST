@@ -1,12 +1,52 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Mountain, Tent, Backpack, Compass } from 'lucide-react';
-import { getFeaturedProducts, categories } from '@/lib/products';
+import { prisma } from '@/lib/prisma';
+import { PrismaProduct } from '@/lib/products';
 
-export default function Home() {
-  const featuredProducts = getFeaturedProducts();
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  count: number;
+}
+
+async function getFeaturedProducts(): Promise<PrismaProduct[]> {
+  try {
+    const products = await prisma.product.findMany({
+      where: { featured: true },
+      include: { category: true },
+      take: 4,
+      orderBy: { createdAt: 'desc' },
+    });
+    return products;
+  } catch (error) {
+    console.error('Error fetching featured products:', error);
+    return [];
+  }
+}
+
+async function getCategories(): Promise<Category[]> {
+  try {
+    const categories = await prisma.category.findMany({
+      orderBy: { name: 'asc' },
+    });
+    return categories.map((cat) => ({
+      ...cat,
+      count: 0, // We'll calculate this later if needed
+    }));
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const [featuredProducts, categories] = await Promise.all([
+    getFeaturedProducts(),
+    getCategories(),
+  ]);
   
   const categoryIcons = [
     {
@@ -111,7 +151,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product) => (
+            {featuredProducts.map((product, index) => (
               <Link
                 key={product.id}
                 href={`/products/${product.id}`}
@@ -119,10 +159,11 @@ export default function Home() {
               >
                 <div className="aspect-square bg-zinc-200 dark:bg-zinc-700 relative overflow-hidden">
                   <Image
-                    src={product.image}
+                    src={product.image || '/products/placeholder.svg'}
                     alt={product.name}
                     fill
                     className="object-cover group-hover:scale-110 transition-transform"
+                    priority={index < 2} // Prioritize loading first 2 images
                   />
                   <div className="w-full h-full flex items-center justify-center text-zinc-400 absolute inset-0 bg-zinc-200 dark:bg-zinc-700 pointer-events-none">
                     <Mountain className="w-20 h-20" />
@@ -136,12 +177,6 @@ export default function Home() {
                     <span className="text-green-600 dark:text-green-400 font-bold text-xl">
                       Rp {product.price.toLocaleString('id-ID')}
                     </span>
-                    <div className="flex items-center">
-                      <span className="text-yellow-500">★</span>
-                      <span className="text-sm text-zinc-600 dark:text-zinc-400 ml-1">
-                        {product.rating}
-                      </span>
-                    </div>
                   </div>
                 </div>
               </Link>

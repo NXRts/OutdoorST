@@ -1,37 +1,45 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, ShoppingCart, Star, Truck, Shield, RotateCcw } from 'lucide-react';
 import { Mountain } from 'lucide-react';
-import { getProductById } from '@/lib/products';
+import { notFound } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
+import { PrismaProduct } from '@/lib/products';
 
-export default function ProductDetailPage({
+async function getProduct(id: string): Promise<PrismaProduct | null> {
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id },
+      include: { category: true },
+    });
+    return product;
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    return null;
+  }
+}
+
+export default async function ProductDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const product = getProductById(Number(params.id));
+  const { id } = await params;
+  const product = await getProduct(id);
 
   if (!product) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-black py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
-            Produk Tidak Ditemukan
-          </h1>
-          <Link
-            href="/products"
-            className="text-green-600 dark:text-green-400 hover:underline"
-          >
-            Kembali ke Daftar Produk
-          </Link>
-        </div>
-      </div>
-    );
+    notFound();
   }
-  
-  const productData = product;
+
+  // Parse images JSON string
+  let productImages: string[] = [];
+  try {
+    if (product.images) {
+      productImages = JSON.parse(product.images);
+    }
+  } catch (error) {
+    console.error('Error parsing images:', error);
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-black py-8">
@@ -50,25 +58,26 @@ export default function ProductDetailPage({
           <div>
             <div className="aspect-square bg-zinc-200 dark:bg-zinc-700 rounded-lg overflow-hidden mb-4 relative">
               <Image
-                src={productData.image}
-                alt={productData.name}
+                src={product.image || '/products/placeholder.svg'}
+                alt={product.name}
                 fill
                 className="object-cover"
+                priority // Prioritize main product image
               />
               <div className="w-full h-full flex items-center justify-center text-zinc-400 absolute inset-0 bg-zinc-200 dark:bg-zinc-700 pointer-events-none">
                 <Mountain className="w-32 h-32" />
               </div>
             </div>
-            {productData.images && productData.images.length > 1 && (
+            {productImages.length > 0 && (
               <div className="grid grid-cols-3 gap-4">
-                {productData.images.map((image, index) => (
+                {productImages.map((image, index) => (
                   <div
                     key={index}
                     className="aspect-square bg-zinc-200 dark:bg-zinc-700 rounded-lg overflow-hidden cursor-pointer hover:ring-2 ring-green-500 transition-all relative"
                   >
                     <Image
                       src={image}
-                      alt={`${productData.name} ${index + 1}`}
+                      alt={`${product.name} ${index + 1}`}
                       fill
                       className="object-cover"
                     />
@@ -84,83 +93,34 @@ export default function ProductDetailPage({
           {/* Product Info */}
           <div>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-2">
-              {productData.category}
+              {product.category.name}
             </p>
             <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
-              {productData.name}
+              {product.name}
             </h1>
-            
-            {/* Rating */}
-            <div className="flex items-center gap-2 mb-4">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-5 h-5 ${
-                      i < Math.floor(productData.rating)
-                        ? 'fill-yellow-400 text-yellow-400'
-                        : 'text-zinc-300 dark:text-zinc-600'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-zinc-600 dark:text-zinc-400">
-                {productData.rating} ({productData.reviews} ulasan)
-              </span>
-            </div>
 
             {/* Price */}
             <div className="mb-6">
-              <div className="flex items-center gap-4">
-                <span className="text-4xl font-bold text-green-600 dark:text-green-400">
-                  Rp {productData.price.toLocaleString('id-ID')}
-                </span>
-                {productData.originalPrice && (
-                  <>
-                    <span className="text-xl text-zinc-400 line-through">
-                      Rp {productData.originalPrice.toLocaleString('id-ID')}
-                    </span>
-                    <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      -{Math.round((1 - productData.price / productData.originalPrice) * 100)}%
-                    </span>
-                  </>
-                )}
-              </div>
+              <span className="text-4xl font-bold text-green-600 dark:text-green-400">
+                Rp {product.price.toLocaleString('id-ID')}
+              </span>
             </div>
 
             {/* Stock */}
             <div className="mb-6">
-              {productData.stock > 0 ? (
+              {product.stock > 0 ? (
                 <p className="text-green-600 dark:text-green-400 font-semibold">
-                  ✓ Tersedia ({productData.stock} unit)
+                  ✓ Tersedia ({product.stock} unit)
                 </p>
               ) : (
                 <p className="text-red-500 font-semibold">✗ Stok Habis</p>
               )}
             </div>
 
-
-            {/* Features */}
-            {productData.features && productData.features.length > 0 && (
-              <div className="mb-6">
-                <h3 className="font-semibold text-lg mb-3 text-zinc-900 dark:text-zinc-100">
-                  Spesifikasi:
-                </h3>
-                <ul className="space-y-2">
-                  {productData.features.map((feature, index) => (
-                    <li key={index} className="flex items-center text-zinc-600 dark:text-zinc-400">
-                      <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
             {/* Actions */}
             <div className="flex gap-4 mb-8">
               <button
-                disabled={productData.stock === 0}
+                disabled={product.stock === 0}
                 className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:bg-zinc-400 disabled:cursor-not-allowed"
               >
                 <ShoppingCart className="w-5 h-5" />
@@ -205,7 +165,7 @@ export default function ProductDetailPage({
           </h2>
           <div className="prose dark:prose-invert max-w-none">
             <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              {productData.description}
+              {product.description}
             </p>
           </div>
         </div>
