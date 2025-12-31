@@ -1,6 +1,5 @@
-import { PrismaClient } from '../src/generated/prisma';
+import { PrismaClient } from './src/generated/prisma/client.js';
 import bcrypt from 'bcryptjs';
-import 'dotenv/config';
 
 const prisma = new PrismaClient();
 
@@ -60,7 +59,7 @@ async function main() {
         stock: 10,
         featured: true,
         categoryId: categories[0].id,
-        images: [],
+        images: '["/products/tenda-dome-4.jpg", "/products/tenda-dome-4-2.jpg", "/products/tenda-dome-4-3.jpg"]',
       },
     }),
     prisma.product.create({
@@ -72,7 +71,7 @@ async function main() {
         stock: 15,
         featured: true,
         categoryId: categories[1].id,
-        images: [],
+        images: '["/products/ransel-hiking-50l.jpg", "/products/ransel-hiking-50l-2.jpg"]',
       },
     }),
     prisma.product.create({
@@ -84,7 +83,7 @@ async function main() {
         stock: 20,
         featured: true,
         categoryId: categories[3].id,
-        images: [],
+        images: '["/products/kompor-portable.jpg"]',
       },
     }),
     prisma.product.create({
@@ -96,7 +95,7 @@ async function main() {
         stock: 25,
         featured: true,
         categoryId: categories[2].id,
-        images: [],
+        images: '["/products/sleeping-bag-10c.jpg"]',
       },
     }),
   ]);
