@@ -1,6 +1,6 @@
 # 🏔️ Toko Outdoor - Website E-Commerce Perlengkapan Outdoor
 
-Website e-commerce untuk toko perlengkapan outdoor yang dibangun dengan Next.js 16, TypeScript, dan Tailwind CSS.
+Website e-commerce untuk toko perlengkapan outdoor yang dibangun dengan Next.js 16, TypeScript, Prisma, dan Tailwind CSS.
 
 ## ✨ Fitur
 
@@ -8,7 +8,7 @@ Website e-commerce untuk toko perlengkapan outdoor yang dibangun dengan Next.js 
 - 📦 **Halaman Produk** - Daftar produk dengan filter dan pencarian
 - 🔍 **Detail Produk** - Informasi lengkap produk dengan gambar dan spesifikasi
 - 🛒 **Keranjang Belanja** - Manajemen keranjang dengan update quantity
-- 👤 **Autentikasi** - Login dan registrasi dengan NextAuth (mock data)
+- 👤 **Autentikasi** - Login dan registrasi dengan NextAuth
 - 📱 **Responsive Design** - Tampilan optimal di semua perangkat
 - 🌙 **Dark Mode** - Dukungan tema gelap
 
@@ -17,9 +17,8 @@ Website e-commerce untuk toko perlengkapan outdoor yang dibangun dengan Next.js 
 ### Prasyarat
 
 - Node.js 18+ 
+- PostgreSQL database
 - npm atau yarn
-
-> **Catatan:** Untuk saat ini website menggunakan data mock (tanpa database). Database dapat ditambahkan nanti jika diperlukan.
 
 ### Instalasi
 
@@ -33,19 +32,34 @@ cd toko_outdoor
 npm install
 ```
 
-3. (Opsional) Setup environment variables untuk NextAuth:
+3. Setup environment variables:
 Buat file `.env` di root project dengan isi:
 ```env
+DATABASE_URL="postgresql://user:password@localhost:5432/toko_outdoor?schema=public"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-secret-key-here-change-this-in-production"
 ```
 
-4. Jalankan development server:
+4. Setup database:
+```bash
+# Generate Prisma Client
+npx prisma generate
+
+# Jalankan migration
+npx prisma migrate dev --name init
+
+# (Opsional) Seed database dengan data contoh
+# Install tsx jika belum: npm install -D tsx
+# Kemudian jalankan: npm run db:seed
+# atau: npx prisma db seed
+```
+
+5. Jalankan development server:
 ```bash
 npm run dev
 ```
 
-5. Buka [http://localhost:3000](http://localhost:3000) di browser
+6. Buka [http://localhost:3000](http://localhost:3000) di browser
 
 ## 📸 Menambahkan Gambar Produk
 
@@ -83,26 +97,31 @@ toko_outdoor/
 └── public/                     # Static files
 ```
 
-## 📝 Data Produk
+## 🗄️ Database Schema
 
-Data produk saat ini disimpan di `src/lib/products.ts` sebagai mock data. Anda dapat:
-- Mengedit data produk langsung di file tersebut
-- Menambahkan produk baru
-- Mengubah harga, deskripsi, dan informasi lainnya
+Project menggunakan Prisma dengan PostgreSQL. Schema mencakup:
 
-Untuk menggunakan database (Prisma + PostgreSQL), Anda dapat:
-1. Setup database sesuai instruksi di bagian bawah
-2. Migrate data dari `src/lib/products.ts` ke database
-3. Update halaman untuk menggunakan Prisma client
+- **User** - Data pengguna dan autentikasi
+- **Product** - Data produk
+- **Category** - Kategori produk
+- **CartItem** - Item di keranjang
+- **Order** - Data pesanan
+- **OrderItem** - Item dalam pesanan
+
+Untuk mengelola data, Anda dapat menggunakan Prisma Studio:
+```bash
+npx prisma studio
+```
 
 ## 🛠️ Teknologi yang Digunakan
 
 - **Next.js 16** - React framework
 - **TypeScript** - Type safety
-- **NextAuth** - Autentikasi (dengan mock data)
+- **Prisma** - ORM untuk database
+- **NextAuth** - Autentikasi
 - **Tailwind CSS** - Styling
 - **Lucide React** - Icons
-- **Prisma** - (Opsional, untuk database di masa depan)
+- **PostgreSQL** - Database
 
 ## 📝 Scripts
 
@@ -113,13 +132,15 @@ Untuk menggunakan database (Prisma + PostgreSQL), Anda dapat:
 
 ## 🔐 Autentikasi
 
-Project menggunakan NextAuth dengan mock data untuk development. 
+Project menggunakan NextAuth dengan Prisma untuk autentikasi. Fitur:
+- Login dengan email/password
+- Registrasi user baru (dapat ditambahkan)
+- Session management
+- Role-based access (USER, ADMIN)
 
-**Akun default untuk testing:**
+Setelah menjalankan seed script, akun default:
 - Email: `admin@tokooutdoor.com` / Password: `admin123` (Admin)
 - Email: `user@example.com` / Password: `user123` (User)
-
-Untuk production, setup database dan update `src/lib/auth.ts` untuk menggunakan Prisma.
 
 ## 🎨 Customization
 

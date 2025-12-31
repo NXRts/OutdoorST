@@ -1,62 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, ShoppingCart, Star, Truck, Shield, RotateCcw } from 'lucide-react';
 import { Mountain } from 'lucide-react';
-
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  price: number;
-  stock: number;
-  image: string | null;
-  images: string[];
-  category: {
-    id: string;
-    name: string;
-    slug: string;
-  };
-  featured: boolean;
-}
+import { getProductById } from '@/lib/products';
 
 export default function ProductDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const response = await fetch(`/api/products/${params.id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setProduct(data);
-        }
-      } catch (error) {
-        console.error('Error fetching product:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProduct();
-  }, [params.id]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-black py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-zinc-600 dark:text-zinc-400">Memuat produk...</p>
-        </div>
-      </div>
-    );
-  }
+  const product = getProductById(Number(params.id));
 
   if (!product) {
     return (
@@ -183,6 +138,7 @@ export default function ProductDetailPage({
                 <p className="text-red-500 font-semibold">✗ Stok Habis</p>
               )}
             </div>
+
 
             {/* Features */}
             {productData.features && productData.features.length > 0 && (

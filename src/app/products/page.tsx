@@ -1,45 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Mountain, Search, Filter } from 'lucide-react';
-
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  price: number;
-  stock: number;
-  image: string | null;
-  category: {
-    id: string;
-    name: string;
-    slug: string;
-  };
-  featured: boolean;
-}
+import { products } from '@/lib/products';
 
 export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const response = await fetch('/api/products');
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProducts();
-  }, []);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -78,36 +46,28 @@ export default function ProductsPage() {
         </div>
 
         {/* Products Grid */}
-        {loading ? (
-          <div className="col-span-full text-center py-12">
-            <p className="text-zinc-600 dark:text-zinc-400">Memuat produk...</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.length === 0 ? (
-              <div className="col-span-full text-center py-12">
-                <p className="text-zinc-600 dark:text-zinc-400">Tidak ada produk yang ditemukan.</p>
-              </div>
-            ) : (
-              filteredProducts.map((product) => (
-            <Link
-              key={product.id}
-              href={`/products/${product.id}`}
-              className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow group"
-            >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredProducts.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-zinc-600 dark:text-zinc-400">Tidak ada produk yang ditemukan.</p>
+            </div>
+          ) : (
+            filteredProducts.map((product) => (
+              <Link
+                key={product.id}
+                href={`/products/${product.id}`}
+                className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow group"
+              >
                 <div className="aspect-square bg-zinc-200 dark:bg-zinc-700 relative overflow-hidden">
-                {product.image ? (
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-zinc-400">
-                    <Mountain className="w-20 h-20" />
-                  </div>
-                )}
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform"
+                />
+                <div className="w-full h-full flex items-center justify-center text-zinc-400 absolute inset-0 bg-zinc-200 dark:bg-zinc-700 pointer-events-none">
+                  <Mountain className="w-20 h-20" />
+                </div>
                 {product.stock === 0 && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
                     <span className="bg-red-500 text-white px-4 py-2 rounded">Habis</span>
@@ -116,15 +76,21 @@ export default function ProductsPage() {
               </div>
               <div className="p-4">
                 <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-1">
-                  {product.category.name}
+                  {product.category}
                 </p>
                 <h3 className="font-semibold text-lg mb-2 text-zinc-900 dark:text-zinc-100 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors line-clamp-2">
                   {product.name}
                 </h3>
                 <div className="flex items-center justify-between">
                   <span className="text-green-600 dark:text-green-400 font-bold text-xl">
-                    Rp {Number(product.price).toLocaleString('id-ID')}
+                    Rp {product.price.toLocaleString('id-ID')}
                   </span>
+                  <div className="flex items-center">
+                    <span className="text-yellow-500">★</span>
+                    <span className="text-sm text-zinc-600 dark:text-zinc-400 ml-1">
+                      {product.rating}
+                    </span>
+                  </div>
                 </div>
                 {product.stock > 0 && (
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
@@ -133,10 +99,9 @@ export default function ProductsPage() {
                 )}
               </div>
             </Link>
-              ))
-            )}
-          </div>
-        )}
+            ))
+          )}
+        </div>
 
         {/* Pagination */}
         <div className="mt-12 flex justify-center gap-2">
