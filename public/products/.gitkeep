@@ -1,0 +1,7 @@
+# Folder untuk gambar produk
+# Letakkan gambar produk di sini dengan format:
+# - tenda-dome-4.jpg
+# - ransel-hiking-50l.jpg
+# - sleeping-bag-10c.jpg
+# dll sesuai dengan nama file di src/lib/products.ts
+

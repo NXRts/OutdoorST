@@ -1,62 +1,33 @@
+'use client';
+
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Mountain, Tent, Backpack, Compass } from 'lucide-react';
+import { getFeaturedProducts, categories } from '@/lib/products';
 
 export default function Home() {
-  const categories = [
+  const featuredProducts = getFeaturedProducts();
+  
+  const categoryIcons = [
     {
       name: 'Tenda & Shelter',
       icon: Tent,
-      description: 'Tenda untuk camping dan hiking',
       color: 'bg-blue-500',
     },
     {
       name: 'Tas & Ransel',
       icon: Backpack,
-      description: 'Tas ransel untuk petualangan',
       color: 'bg-green-500',
     },
     {
       name: 'Navigasi',
       icon: Compass,
-      description: 'Kompas dan GPS',
       color: 'bg-orange-500',
     },
     {
       name: 'Peralatan Gunung',
       icon: Mountain,
-      description: 'Peralatan untuk pendakian',
       color: 'bg-purple-500',
-    },
-  ];
-
-  const featuredProducts = [
-    {
-      id: 1,
-      name: 'Tenda Dome 4 Orang',
-      price: 'Rp 1.500.000',
-      image: '/api/placeholder/300/300',
-      rating: 4.8,
-    },
-    {
-      id: 2,
-      name: 'Ransel Hiking 50L',
-      price: 'Rp 800.000',
-      image: '/api/placeholder/300/300',
-      rating: 4.9,
-    },
-    {
-      id: 3,
-      name: 'Sleeping Bag -10°C',
-      price: 'Rp 600.000',
-      image: '/api/placeholder/300/300',
-      rating: 4.7,
-    },
-    {
-      id: 4,
-      name: 'Kompor Portable',
-      price: 'Rp 350.000',
-      image: '/api/placeholder/300/300',
-      rating: 4.6,
     },
   ];
 
@@ -98,15 +69,17 @@ export default function Home() {
             Kategori Produk
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((category) => {
-              const Icon = category.icon;
+            {categories.slice(0, 4).map((category) => {
+              const iconData = categoryIcons.find((c) => c.name === category.name);
+              const Icon = iconData?.icon || Mountain;
+              const color = iconData?.color || 'bg-gray-500';
               return (
                 <Link
-                  key={category.name}
-                  href={`/categories/${category.name.toLowerCase().replace(/\s+/g, '-')}`}
+                  key={category.slug}
+                  href={`/categories/${category.slug}`}
                   className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-md hover:shadow-xl transition-shadow group"
                 >
-                  <div className={`${category.color} w-16 h-16 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  <div className={`${color} w-16 h-16 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <Icon className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2 text-zinc-900 dark:text-zinc-100">
@@ -145,7 +118,13 @@ export default function Home() {
                 className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow group"
               >
                 <div className="aspect-square bg-zinc-200 dark:bg-zinc-700 relative overflow-hidden">
-                  <div className="w-full h-full flex items-center justify-center text-zinc-400">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform"
+                  />
+                  <div className="w-full h-full flex items-center justify-center text-zinc-400 absolute inset-0 bg-zinc-200 dark:bg-zinc-700 pointer-events-none">
                     <Mountain className="w-20 h-20" />
                   </div>
                 </div>
@@ -155,7 +134,7 @@ export default function Home() {
                   </h3>
                   <div className="flex items-center justify-between">
                     <span className="text-green-600 dark:text-green-400 font-bold text-xl">
-                      {product.price}
+                      Rp {product.price.toLocaleString('id-ID')}
                     </span>
                     <div className="flex items-center">
                       <span className="text-yellow-500">★</span>
