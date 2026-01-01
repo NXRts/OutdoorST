@@ -1,23 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, ShoppingCart, Star, Truck, Shield, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Truck, Shield, RotateCcw } from 'lucide-react';
 import { Mountain } from 'lucide-react';
 import { notFound } from 'next/navigation';
-import { prisma } from '@/lib/prisma';
-import { PrismaProduct } from '@/lib/products';
-
-async function getProduct(id: string): Promise<PrismaProduct | null> {
-  try {
-    const product = await prisma.product.findUnique({
-      where: { id },
-      include: { category: true },
-    });
-    return product;
-  } catch (error) {
-    console.error('Error fetching product:', error);
-    return null;
-  }
-}
+import { getProductById } from '@/lib/products';
 
 export default async function ProductDetailPage({
   params,
@@ -25,17 +11,21 @@ export default async function ProductDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = await getProduct(id);
+  const product = getProductById(parseInt(id));
 
   if (!product) {
     notFound();
   }
 
-  // Parse images JSON string
+  // Parse images JSON string if needed, or use array directly
   let productImages: string[] = [];
   try {
     if (product.images) {
-      productImages = JSON.parse(product.images);
+      if (Array.isArray(product.images)) {
+        productImages = product.images;
+      } else if (typeof product.images === 'string') {
+        productImages = JSON.parse(product.images);
+      }
     }
   } catch (error) {
     console.error('Error parsing images:', error);
@@ -93,7 +83,7 @@ export default async function ProductDetailPage({
           {/* Product Info */}
           <div>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-2">
-              {product.category.name}
+              {product.category}
             </p>
             <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
               {product.name}

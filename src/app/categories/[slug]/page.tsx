@@ -1,20 +1,13 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { prisma } from '@/lib/prisma';
-import { formatCurrency } from '@/lib/products';
+import { formatCurrency, getProductsByCategory, categories as mockCategories } from '@/lib/products';
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const category = await prisma.category.findUnique({
-    where: { slug: params.slug },
-    include: {
-      products: {
-        where: { stock: { gt: 0 } },
-        orderBy: { createdAt: 'desc' },
-      },
-    },
-  });
+
+  const category = mockCategories.find((c) => c.slug === slug);
+  const products = getProductsByCategory(slug);
 
   if (!category) {
     notFound();
@@ -41,7 +34,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
       {/* Products Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {category.products.length === 0 ? (
+        {products.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">📦</div>
             <h3 className="text-xl font-medium text-gray-900 mb-2">
@@ -61,12 +54,12 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           <>
             <div className="flex items-center justify-between mb-6">
               <p className="text-gray-600">
-                {category.products.length} produk ditemukan
+                {products.length} produk ditemukan
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {category.products.map((product) => (
+              {products.map((product) => (
                 <Link
                   key={product.id}
                   href={`/products/${product.id}`}
@@ -74,7 +67,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                 >
                   <div className="aspect-square relative overflow-hidden">
                     <Image
-                      src={product.images ? JSON.parse(product.images)[0] : product.image || '/placeholder-product.jpg'}
+                      src={product.images ? (typeof product.images === 'string' ? JSON.parse(product.images) : product.images)[0] : product.image || '/placeholder-product.jpg'}
                       alt={product.name}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-200"
@@ -122,10 +115,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const category = await prisma.category.findUnique({
-    where: { slug: params.slug },
-    select: { name: true, description: true },
-  });
+  const category = mockCategories.find((c) => c.slug === slug);
 
   if (!category) {
     return {
