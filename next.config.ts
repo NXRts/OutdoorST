@@ -5,6 +5,12 @@ const nextConfig: NextConfig = {
   // Optimize images
   images: {
     formats: ['image/webp', 'image/avif'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
+      },
+    ],
   },
   // Enable experimental features for better performance
   experimental: {

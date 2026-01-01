@@ -1,53 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Mountain, Tent, Backpack, Compass } from 'lucide-react';
-import { prisma } from '@/lib/prisma';
-import { PrismaProduct } from '@/lib/products';
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  count: number;
-}
-
-async function getFeaturedProducts(): Promise<PrismaProduct[]> {
-  try {
-    const products = await prisma.product.findMany({
-      where: { featured: true },
-      include: { category: true },
-      take: 4,
-      orderBy: { createdAt: 'desc' },
-    });
-    return products;
-  } catch (error) {
-    console.error('Error fetching featured products:', error);
-    return [];
-  }
-}
-
-async function getCategories(): Promise<Category[]> {
-  try {
-    const categories = await prisma.category.findMany({
-      orderBy: { name: 'asc' },
-    });
-    return categories.map((cat) => ({
-      ...cat,
-      count: 0, // We'll calculate this later if needed
-    }));
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    return [];
-  }
-}
+import { getFeaturedProducts, categories as mockCategories } from '@/lib/products';
 
 export default async function Home() {
-  const [featuredProducts, categories] = await Promise.all([
-    getFeaturedProducts(),
-    getCategories(),
-  ]);
-  
+  const featuredProducts = getFeaturedProducts();
+  const categories = mockCategories;
+
   const categoryIcons = [
     {
       name: 'Tenda & Shelter',

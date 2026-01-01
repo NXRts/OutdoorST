@@ -1,26 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Mountain } from 'lucide-react';
-import { prisma } from '@/lib/prisma';
-import { PrismaProduct } from '@/lib/products';
+import { products } from '@/lib/products';
 
-async function getProducts(): Promise<PrismaProduct[]> {
-  try {
-    const products = await prisma.product.findMany({
-      include: { category: true },
-      orderBy: { createdAt: 'desc' },
-      take: 20, // Limit to 20 products for better performance
-    });
-    return products;
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    return [];
-  }
-}
-
-export default async function ProductsPage() {
-  const products = await getProducts();
-
+export default function ProductsPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-black py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -66,7 +49,7 @@ export default async function ProductsPage() {
                 </div>
                 <div className="p-4">
                   <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-1">
-                    {product.category.name}
+                    {product.category}
                   </p>
                   <h3 className="font-semibold text-lg mb-2 text-zinc-900 dark:text-zinc-100 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors line-clamp-2">
                     {product.name}
