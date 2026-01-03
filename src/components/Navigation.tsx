@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, Menu, User, Mountain } from 'lucide-react';
+import { ShoppingCart, Menu, User, Mountain, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navigation() {
@@ -66,46 +66,81 @@ export default function Navigation() {
             </Link>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 text-zinc-700 dark:text-zinc-300"
+              className="md:hidden p-2 text-zinc-700 dark:text-zinc-300 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+              aria-label="Toggle menu"
             >
-              <Menu className="w-6 h-6" />
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Backdrop */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 space-y-2">
+          <div
+            className="fixed inset-0 bg-black/50 z-40 transition-opacity md:hidden"
+            onClick={() => setIsMenuOpen(false)}
+          />
+        )}
+
+        {/* Mobile Menu */}
+        <div
+          className={`fixed top-16 right-0 h-[calc(100vh-64px)] w-full sm:w-80 bg-white dark:bg-zinc-900 z-50 transform transition-transform duration-300 ease-in-out border-l border-zinc-200 dark:border-zinc-800 md:hidden ${
+            isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <div className="flex flex-col p-6 space-y-4">
             <Link
               href="/"
-              className="block px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded"
+              className="text-lg font-medium text-zinc-900 dark:text-zinc-100 px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Beranda
             </Link>
             <Link
               href="/products"
-              className="block px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded"
+              className="text-lg font-medium text-zinc-900 dark:text-zinc-100 px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Produk
             </Link>
             <Link
               href="/categories"
-              className="block px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded"
+              className="text-lg font-medium text-zinc-900 dark:text-zinc-100 px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Kategori
             </Link>
             <Link
               href="/about"
-              className="block px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded"
+              className="text-lg font-medium text-zinc-900 dark:text-zinc-100 px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Tentang
             </Link>
+            <div className="pt-4 mt-4 border-t border-zinc-200 dark:border-zinc-800 grid grid-cols-2 gap-4">
+              <Link
+                href="/cart"
+                className="flex flex-col items-center justify-center p-4 bg-zinc-100 dark:bg-zinc-800 rounded-xl"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <ShoppingCart className="w-6 h-6 mb-2" />
+                <span className="text-sm">Keranjang</span>
+              </Link>
+              <Link
+                href="/login"
+                className="flex flex-col items-center justify-center p-4 bg-zinc-100 dark:bg-zinc-800 rounded-xl"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <User className="w-6 h-6 mb-2" />
+                <span className="text-sm">Akun</span>
+              </Link>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );

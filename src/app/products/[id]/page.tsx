@@ -111,16 +111,15 @@ export default async function ProductDetailPage({
               )}
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <button
                 disabled={product.stock === 0}
-                className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:bg-zinc-400 disabled:cursor-not-allowed"
+                className="flex-3 flex items-center justify-center gap-2 bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:bg-zinc-400 disabled:cursor-not-allowed"
               >
                 <ShoppingCart className="w-5 h-5" />
                 Tambah ke Keranjang
               </button>
-              <button className="px-6 py-4 border-2 border-zinc-300 dark:border-zinc-700 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-red-500 hover:text-red-600">
+              <button className="flex-1 flex items-center justify-center py-4 border-2 border-zinc-300 dark:border-zinc-700 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-red-500 hover:text-red-600">
                 <Heart className="w-5 h-5" />
               </button>
             </div>

@@ -33,8 +33,8 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-black">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-green-600 via-green-700 to-green-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+      <section className="relative bg-linear-to-br from-green-600 via-green-700 to-green-800 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-32">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Siapkan Petualangan Anda
@@ -67,7 +67,7 @@ export default async function Home() {
           <h2 className="text-3xl font-bold text-center mb-12 text-zinc-900 dark:text-zinc-100">
             Kategori Produk
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {categories.slice(0, 4).map((category) => {
               const iconData = categoryIcons.find((c) => c.name === category.name);
               const Icon = iconData?.icon || Mountain;

@@ -18,7 +18,7 @@ export default function ProductsPage() {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {products.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <p className="text-zinc-600 dark:text-zinc-400">Tidak ada produk yang ditemukan.</p>
