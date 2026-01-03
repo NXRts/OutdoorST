@@ -81,8 +81,8 @@ export default function CartPage() {
                 key={item.id}
                 className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-md flex flex-col sm:flex-row gap-4"
               >
-                <div className="w-full sm:w-32 h-32 bg-zinc-200 dark:bg-zinc-700 rounded-lg flex-shrink-0 flex items-center justify-center">
-                  <Package className="w-12 h-12 text-zinc-400" />
+                <div className="w-24 h-24 sm:w-32 sm:h-32 bg-zinc-200 dark:bg-zinc-700 rounded-lg shrink-0 flex items-center justify-center">
+                  <Package className="w-10 h-10 sm:w-12 sm:h-12 text-zinc-400" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
@@ -91,35 +91,35 @@ export default function CartPage() {
                   <p className="text-green-600 dark:text-green-400 font-bold text-lg mb-4">
                     Rp {item.price.toLocaleString('id-ID')}
                   </p>
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-wrap items-center gap-4">
                     <div className="flex items-center border border-zinc-300 dark:border-zinc-700 rounded-lg">
                       <button
                         onClick={() => updateQuantity(item.id, -1)}
-                        className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+                        className="p-1.5 sm:p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
                       >
-                        <Minus className="w-4 h-4" />
+                        <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-zinc-900 dark:text-zinc-100" />
                       </button>
-                      <span className="px-4 py-2 text-zinc-900 dark:text-zinc-100">
+                      <span className="px-3 sm:px-4 py-1 sm:py-2 text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => updateQuantity(item.id, 1)}
-                        className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+                        className="p-1.5 sm:p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
                       >
-                        <Plus className="w-4 h-4" />
+                        <Plus className="w-3 h-3 sm:w-4 sm:h-4 text-zinc-900 dark:text-zinc-100" />
                       </button>
                     </div>
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="flex items-center gap-2 text-red-500 hover:text-red-700 transition-colors"
+                      className="flex items-center gap-1.5 text-red-500 hover:text-red-700 transition-colors text-sm"
                     >
-                      <Trash2 className="w-5 h-5" />
+                      <Trash2 className="w-4 h-4" />
                       Hapus
                     </button>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+                <div className="text-right sm:text-right mt-2 sm:mt-0">
+                  <p className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">
                     Rp {(item.price * item.quantity).toLocaleString('id-ID')}
                   </p>
                 </div>
