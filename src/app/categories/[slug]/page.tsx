@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { formatCurrency, getProductsByCategory, categories as mockCategories } from '@/lib/products';
+import { Package } from 'lucide-react';
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -40,7 +41,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         {/* Products Grid */}
         {products.length === 0 ? (
           <div className="col-span-full text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">📦</div>
+            <Package className="w-24 h-24 text-zinc-300 dark:text-zinc-700 mx-auto mb-6" />
             <h3 className="text-xl font-medium text-gray-900 mb-2">
               Belum ada produk di kategori ini
             </h3>

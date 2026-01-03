@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft } from 'lucide-react';
+import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft, Package } from 'lucide-react';
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([
@@ -82,7 +82,7 @@ export default function CartPage() {
                 className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-md flex flex-col sm:flex-row gap-4"
               >
                 <div className="w-full sm:w-32 h-32 bg-zinc-200 dark:bg-zinc-700 rounded-lg flex-shrink-0 flex items-center justify-center">
-                  <span className="text-4xl">📦</span>
+                  <Package className="w-12 h-12 text-zinc-400" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
