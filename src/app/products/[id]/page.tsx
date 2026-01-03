@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, ShoppingCart, Truck, Shield, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Truck, Shield, RotateCcw, Check, X, Heart } from 'lucide-react';
 import { Mountain } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { getProductById } from '@/lib/products';
@@ -99,11 +99,15 @@ export default async function ProductDetailPage({
             {/* Stock */}
             <div className="mb-6">
               {product.stock > 0 ? (
-                <p className="text-green-600 dark:text-green-400 font-semibold">
-                  ✓ Tersedia ({product.stock} unit)
+                <p className="text-green-600 dark:text-green-400 font-semibold flex items-center gap-2">
+                  <Check className="w-5 h-5" />
+                  Tersedia ({product.stock} unit)
                 </p>
               ) : (
-                <p className="text-red-500 font-semibold">✗ Stok Habis</p>
+                <p className="text-red-500 font-semibold flex items-center gap-2">
+                  <X className="w-5 h-5" />
+                  Stok Habis
+                </p>
               )}
             </div>
 
@@ -116,8 +120,8 @@ export default async function ProductDetailPage({
                 <ShoppingCart className="w-5 h-5" />
                 Tambah ke Keranjang
               </button>
-              <button className="px-6 py-4 border-2 border-zinc-300 dark:border-zinc-700 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">
-                ❤️
+              <button className="px-6 py-4 border-2 border-zinc-300 dark:border-zinc-700 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-red-500 hover:text-red-600">
+                <Heart className="w-5 h-5" />
               </button>
             </div>
 

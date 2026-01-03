@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, Menu, User } from 'lucide-react';
+import { ShoppingCart, Menu, User, Mountain } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navigation() {
@@ -13,8 +13,9 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
+            <Mountain className="w-8 h-8 text-green-600 dark:text-green-400" />
             <span className="text-2xl font-bold text-green-600 dark:text-green-400">
-              🏔️ Toko Outdoor
+              Toko Outdoor
             </span>
           </Link>
 

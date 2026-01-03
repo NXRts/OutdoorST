@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Mountain, Tent, Backpack, Compass } from 'lucide-react';
+import { ArrowRight, Mountain, Tent, Backpack, Compass, Check, Truck, MessageCircle } from 'lucide-react';
 import { getFeaturedProducts, categories as mockCategories } from '@/lib/products';
 
 export default async function Home() {
@@ -153,7 +153,7 @@ export default async function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">✓</span>
+                <Check className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-zinc-900 dark:text-zinc-100">
                 Kualitas Terjamin
@@ -164,7 +164,7 @@ export default async function Home() {
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🚚</span>
+                <Truck className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-zinc-900 dark:text-zinc-100">
                 Pengiriman Cepat
@@ -175,7 +175,7 @@ export default async function Home() {
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">💬</span>
+                <MessageCircle className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-zinc-900 dark:text-zinc-100">
                 Customer Service 24/7

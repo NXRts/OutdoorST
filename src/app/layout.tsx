@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from 'next/link';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Providers from "@/components/Providers";
+import { Mountain } from 'lucide-react';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +40,10 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div>
-                <h3 className="text-xl font-bold text-white mb-4">🏔️ Toko Outdoor</h3>
+              <div className="flex items-center space-x-2 mb-4 text-white">
+                <Mountain className="w-6 h-6 text-green-400" />
+                <h3 className="text-xl font-bold">Toko Outdoor</h3>
+              </div>
                 <p className="text-sm">
                   Perlengkapan outdoor terpercaya untuk petualangan Anda.
                 </p>
@@ -46,19 +51,19 @@ export default function RootLayout({
               <div>
                 <h4 className="font-semibold text-white mb-4">Tautan</h4>
                 <ul className="space-y-2 text-sm">
-                  <li><a href="/" className="hover:text-green-400">Beranda</a></li>
-                  <li><a href="/products" className="hover:text-green-400">Produk</a></li>
-                  <li><a href="/categories" className="hover:text-green-400">Kategori</a></li>
-                  <li><a href="/about" className="hover:text-green-400">Tentang</a></li>
+                  <li><Link href="/" className="hover:text-green-400">Beranda</Link></li>
+                  <li><Link href="/products" className="hover:text-green-400">Produk</Link></li>
+                  <li><Link href="/categories" className="hover:text-green-400">Kategori</Link></li>
+                  <li><Link href="/about" className="hover:text-green-400">Tentang</Link></li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold text-white mb-4">Bantuan</h4>
                 <ul className="space-y-2 text-sm">
-                  <li><a href="/contact" className="hover:text-green-400">Kontak</a></li>
-                  <li><a href="/shipping" className="hover:text-green-400">Pengiriman</a></li>
-                  <li><a href="/returns" className="hover:text-green-400">Pengembalian</a></li>
-                  <li><a href="/faq" className="hover:text-green-400">FAQ</a></li>
+                  <li><Link href="/contact" className="hover:text-green-400">Kontak</Link></li>
+                  <li><Link href="/shipping" className="hover:text-green-400">Pengiriman</Link></li>
+                  <li><Link href="/returns" className="hover:text-green-400">Pengembalian</Link></li>
+                  <li><Link href="/faq" className="hover:text-green-400">FAQ</Link></li>
                 </ul>
               </div>
               <div>
