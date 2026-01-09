@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@/generated/prisma';
 
 export async function GET(request: Request) {
   try {
@@ -8,7 +9,7 @@ export async function GET(request: Request) {
     const search = searchParams.get('search');
     const featured = searchParams.get('featured');
 
-    const where: any = {};
+    const where: Prisma.ProductWhereInput = {};
 
     if (category) {
       const categoryRecord = await prisma.category.findUnique({
@@ -21,8 +22,8 @@ export async function GET(request: Request) {
 
     if (search) {
       where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
+        { name: { contains: search } },
+        { description: { contains: search } },
       ];
     }
 
